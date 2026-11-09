@@ -817,7 +817,7 @@ const CRED_QUAL={'LABMEDIC':{addr:'Avenida Leandro da Mota, nº 1296, Quadra 41,
 function credQual(c){const saved=(tcdLoad(TCD_CRED_KEY,{}))[c]||{};return {...(CRED_QUAL[c]||{addr:'',reps:'',contato:''}),...saved}}
 function suggestOrigem(rows){const t=norm(rows.map(r=>[r.description,r.unit,r.sheet].join(' ')).join(' ')),p=[];
   if(/insumo|reagente|kit|consumivel/.test(t))p.push('fornecimento de insumos laboratoriais');if(/locac|aluguel|comodato/.test(t))p.push('locação de equipamentos');if(/\bpeca|pecas\b/.test(t))p.push('fornecimento de peças de reposição');if(/manutenc|servico|assistencia|reparo/.test(t))p.push('prestação de serviços de manutenção');
-  if(!p.length)return 'fornecimento de produtos e prestação de serviços';return p.length===1?p[0]:p.slice(0,-1).join(', ')+' e '+p.at(-1)}
+  if(!p.length)return 'Fornecimento de produtos e prestação de serviços';return p.length===1?p[0]:p.slice(0,-1).join(', ')+' e '+p.at(-1)}
 const repLines=t=>String(t||'').split(/\n+/).map(s=>s.trim()).filter(Boolean);
 const repName=l=>l.split(',')[0].trim();
 const repPhrase=lines=>{if(!lines.length)return 'por seu(s) sócio(s) administrador(es) '+'_'.repeat(34);const q=lines.map(l=>{const i=l.indexOf(',');return i>0?`**${l.slice(0,i).trim()}**${l.slice(i)}`:`**${l}**`});return (lines.length===1?'por seu sócio administrador ':'por seus sócios administradores ')+(q.length===1?q[0]:q.slice(0,-1).join('; ')+'; e '+q.at(-1))};

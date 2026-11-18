@@ -391,6 +391,7 @@ body.dark .sp-pill.od{background:#4a1d24;color:#ffb3ba}body.dark .sp-pill.up{bac
 @media(max-width:600px){.client-panel{min-width:0}}
 @media print{.client-chips,.client-panel{display:none!important}}
 #termoBtn.is-off{opacity:.5;cursor:not-allowed}
+.btn-notify{background:#fff1e0;color:#9a4d00}body.dark .btn-notify{background:#3a2a14;color:#f5b44b}#ntfBtn.is-off{opacity:.5;cursor:not-allowed}.tcd-co.off{opacity:.55;cursor:not-allowed}@media print{#ntfBtn{display:none!important}}
 </style>
 </head>
 <body>
@@ -415,7 +416,7 @@ body.dark .sp-pill.od{background:#4a1d24;color:#ffb3ba}body.dark .sp-pill.up{bac
 <section class="inv-sec"><h3>Observações</h3><ol class="inv-obs"><li>O saldo devedor de cada título é o valor original deduzido dos pagamentos efetivamente lançados, conforme o item 2.</li><li>Pagamentos realizados após a data de emissão não constam neste demonstrativo e devem ser comunicados ao credor com o respectivo comprovante.</li><li>Ao efetuar o pagamento, informe o nº do documento no comprovante para facilitar a conciliação. A baixa financeira é confirmada após a compensação.</li><li>Os valores referem-se ao principal, sem acréscimo de encargos.</li></ol></section>
 <footer class="inv-foot" id="invFoot"></footer>
 <div class="lh-foot lh-screen"></div></td></tr></tbody></table>
-<div class="invoice-actions"><button class="btn btn-ghost" id="whatsappBtn">Compartilhar via WhatsApp</button><div class="tcd-split" id="termoSplit"><button class="btn btn-dark" id="termoBtn" type="button" aria-haspopup="menu" aria-expanded="false">Confissão de Dívida <span aria-hidden="true">▾</span></button><div class="tcd-menu" id="termoMenu" role="menu"><button type="button" role="menuitem" data-mode="filled"><b>Preenchida</b><small>Sinal, parcelas e vencimentos da fatura emitida</small></button><button type="button" role="menuitem" data-mode="blank"><b>A preencher</b><small>Sinal e parcelas em branco, para negociação presencial</small></button></div></div><button class="btn btn-primary" id="pdfBtn">Imprimir / salvar PDF</button></div>
+<div class="invoice-actions"><button class="btn btn-ghost" id="whatsappBtn">Compartilhar via WhatsApp</button><div class="tcd-split" id="termoSplit"><button class="btn btn-dark" id="termoBtn" type="button" aria-haspopup="menu" aria-expanded="false">Confissão de Dívida <span aria-hidden="true">▾</span></button><div class="tcd-menu" id="termoMenu" role="menu"><button type="button" role="menuitem" data-mode="filled"><b>Preenchida</b><small>Sinal, parcelas e vencimentos da fatura emitida</small></button><button type="button" role="menuitem" data-mode="blank"><b>A preencher</b><small>Sinal e parcelas em branco, para negociação presencial</small></button></div></div><button class="btn btn-notify" id="ntfBtn" type="button" title="Constitui o cliente em mora e comunica a suspensão do fornecimento e do atendimento técnico">Notificação Extrajudicial</button><button class="btn btn-primary" id="pdfBtn">Imprimir / salvar PDF</button></div>
 </div></section></div></div></div>
 </main></div>
 <div class="modal-backdrop" id="paymentModal"><div class="modal"><div class="modal-head"><div><h3>Registrar pagamentos parciais</h3><p>Informe os valores efetivamente recebidos por PIX, transferência, boleto ou outro método.</p></div><button class="icon-btn" data-close="paymentModal">×</button></div><div class="modal-body"><div id="paymentRows"></div></div><div class="modal-foot"><button class="btn btn-ghost" data-close="paymentModal">Cancelar</button><button class="btn btn-primary" id="savePayments">Aplicar abatimentos</button></div></div></div>
@@ -435,7 +436,27 @@ body.dark .sp-pill.od{background:#4a1d24;color:#ffb3ba}body.dark .sp-pill.up{bac
 <div class="field"><label for="tcdForo">Foro eleito</label><input id="tcdForo" type="text" value="Capital do Estado do Rio de Janeiro"></div></div>
 <p class="tcd-note">Campos em branco saem com linha para preenchimento manual. Os dados dos credores e as condições ficam salvos neste navegador; os da devedora são lembrados por cliente.</p>
 </div><div class="modal-foot"><button class="btn btn-ghost" data-close="termoModal">Cancelar</button><button class="btn btn-primary" id="tcdGenerate">Gerar PDF(s)</button></div></div></div>
-<div class="modal-backdrop" id="pdfPreviewModal"><div class="modal pdf-modal" role="dialog" aria-modal="true" aria-labelledby="pdfPrevTitle"><div class="modal-head"><div><h3 id="pdfPrevTitle">Pré-visualização</h3><p id="pdfPrevSub"></p></div><button class="icon-btn" data-close="pdfPreviewModal" aria-label="Fechar">×</button></div><div class="pdf-tabs" id="pdfPrevTabs" role="tablist"></div><div class="pdf-frame-wrap"><iframe id="pdfPrevFrame" title="Pré-visualização do PDF"></iframe></div><div class="modal-foot"><button class="btn btn-ghost" data-close="pdfPreviewModal">Fechar</button><button class="btn btn-ghost" id="pdfPrevOpen">Abrir em nova aba</button><button class="btn btn-ghost" id="pdfPrevAll" hidden>Baixar todos</button><button class="btn btn-primary" id="pdfPrevDownload">Baixar PDF</button></div></div></div>
+<div class="modal-backdrop" id="ntfModal"><div class="modal" style="max-width:720px" role="dialog" aria-modal="true" aria-labelledby="ntfTitle"><div class="modal-head"><div><h3 id="ntfTitle">Notificação Extrajudicial</h3><p>Constitui o cliente em mora e comunica a suspensão do fornecimento e do atendimento técnico. Lista apenas os títulos vencidos, em um PDF por empresa.</p></div><button class="icon-btn" data-close="ntfModal" aria-label="Fechar">×</button></div><div class="modal-body">
+<div class="tcd-sub">Empresas notificantes · um PDF por empresa</div><div class="tcd-cos" id="ntfCompanies"></div>
+<div class="tcd-sub">Suspensão</div><div class="tcd-grid">
+<div class="field"><label for="ntfDate">Suspensão a partir de</label><input id="ntfDate" type="date"></div>
+<div class="field"><label for="ntfRestab">Restabelecimento após a compensação (dias corridos)</label><input id="ntfRestab" type="number" min="1" max="60" step="1" inputmode="numeric"></div>
+<div class="field full"><div class="tcd-cos"><label class="tcd-co"><input type="checkbox" id="ntfSupply" checked><span><b>Fornecimento de insumos</b><small>Deixa de ser entregue na data indicada.</small></span></label><label class="tcd-co"><input type="checkbox" id="ntfTech" checked><span><b>Assistência técnica</b><small>Manutenção corretiva, preventiva e suporte aos equipamentos.</small></span></label></div></div></div>
+<div class="tcd-sub">Prorrogação do vencimento</div><div class="tcd-grid">
+<div class="field"><label for="ntfExt">Houve prorrogação já concedida?</label><select id="ntfExt"><option value="no">Não houve</option><option value="yes">Sim, a pedido do cliente</option></select></div>
+<div class="field"><label for="ntfExtDays">Por quantos dias (corridos)</label><input id="ntfExtDays" type="number" min="1" max="365" step="1" inputmode="numeric"></div></div>
+<p class="tcd-note" id="ntfRemember"></p>
+<div class="tcd-sub">Notificada · dados da fatura emitida</div><div class="tcd-grid">
+<div class="field"><label for="ntfDevName">Razão social</label><input id="ntfDevName" type="text" readonly tabindex="-1" style="background:var(--soft)"></div>
+<div class="field"><label for="ntfDevCnpj">CNPJ</label><input id="ntfDevCnpj" type="text" readonly tabindex="-1" style="background:var(--soft)"></div>
+<div class="field full"><label for="ntfAddr">Endereço (sede)</label><input id="ntfAddr" type="text" placeholder="Rua, nº, sala, bairro, cidade/UF, CEP"></div></div>
+<div class="tcd-sub">Documento</div><div class="tcd-grid">
+<div class="field"><label for="ntfCity">Local de emissão</label><input id="ntfCity" type="text"></div>
+<div class="field"><label for="ntfSeq">Sequência no dia (nº da notificação)</label><input id="ntfSeq" type="number" min="1" max="999" step="1" inputmode="numeric"></div>
+<div class="field full"><label class="tcd-co"><input type="checkbox" id="ntfValues"><span><b>Mostrar o saldo de cada título na tabela</b><small>Por padrão a tabela traz só referência, vencimento e dias de atraso. Havendo pagamento parcial, o saldo aparece sempre.</small></span></label></div></div>
+<p class="tcd-note">A data de emissão é a de hoje e o atraso é contado até ela. A notificação é emitida por cliente e referencia o nº da fatura gerada. Prazo de restabelecimento, prorrogação e endereço ficam lembrados por cliente neste navegador.</p>
+</div><div class="modal-foot"><button class="btn btn-ghost" data-close="ntfModal">Cancelar</button><button class="btn btn-primary" id="ntfGenerate">Gerar notificação</button></div></div></div>
+<div class="modal-backdrop" id="pdfPreviewModal"><div class="modal pdf-modal" role="dialog" aria-modal="true" aria-labelledby="pdfPrevTitle"><div class="modal-head"><div><h3 id="pdfPrevTitle">Pré-visualização</h3><p id="pdfPrevSub"></p></div><button class="icon-btn" data-close="pdfPreviewModal" aria-label="Fechar">×</button></div><div class="pdf-tabs" id="pdfPrevTabs" role="tablist"></div><div class="pdf-frame-wrap"><iframe id="pdfPrevFrame" title="Pré-visualização do PDF"></iframe></div><div class="modal-foot"><button class="btn btn-ghost" data-close="pdfPreviewModal">Fechar</button><button class="btn btn-ghost" id="pdfPrevOpen">Abrir em nova aba</button><button class="btn btn-ghost" id="pdfPrevPrint">Imprimir</button><button class="btn btn-ghost" id="pdfPrevAll" hidden>Baixar todos</button><button class="btn btn-primary" id="pdfPrevDownload">Baixar PDF</button></div></div></div>
 <div class="modal-backdrop" id="yearModal"><div class="modal" style="max-width:460px"><div class="modal-head"><div><h3>Inadimplência Atual — anos do relatório</h3><p>Marque os anos de vencimento cujos títulos vencidos devem compor o PDF.</p></div><button class="icon-btn" data-close="yearModal">×</button></div><div class="modal-body"><div class="year-list" id="yearList"></div></div><div class="modal-foot"><button class="btn btn-ghost" data-close="yearModal">Cancelar</button><button class="btn btn-primary" id="yearConfirm">Gerar PDF</button></div></div></div>
 
 <div class="modal-backdrop" id="sellerModal"><div class="modal sp-modal" role="dialog" aria-modal="true" aria-labelledby="spTitle">
@@ -586,7 +607,7 @@ function showPdfPreview(files,title,sub){PREV.urls.forEach(u=>URL.revokeObjectUR
   $('pdfPrevTabs').innerHTML=files.length>1?files.map((f,i)=>`<button type="button" role="tab" data-i="${i}">${esc(f.label||f.name)}</button>`).join(''):'';$('pdfPrevTabs').hidden=files.length<2;
   pdfPrevShow(0);$('pdfPreviewModal').classList.add('open')}
 function pdfPrevShow(i){PREV.cur=i;$('pdfPrevFrame').src=PREV.urls[i]+'#toolbar=1&view=FitH';document.querySelectorAll('#pdfPrevTabs [data-i]').forEach(b=>{b.classList.toggle('on',+b.dataset.i===i);b.setAttribute('aria-selected',String(+b.dataset.i===i))});$('pdfPrevDownload').textContent=PREV.files.length>1?`Baixar ${PREV.files[i].label||'PDF'}`:'Baixar PDF'}
-function bindPdfPreview(){$('pdfPrevTabs').onclick=e=>{const b=e.target.closest('[data-i]');if(b)pdfPrevShow(+b.dataset.i)};
+function bindPdfPreview(){$('pdfPrevPrint').onclick=()=>{try{const w=$('pdfPrevFrame').contentWindow;w.focus();w.print()}catch(_){const t=window.open(PREV.urls[PREV.cur],'_blank');if(!t)toast('Não foi possível abrir a impressão. Use "Baixar PDF" e imprima o arquivo.')}};$('pdfPrevTabs').onclick=e=>{const b=e.target.closest('[data-i]');if(b)pdfPrevShow(+b.dataset.i)};
   $('pdfPrevDownload').onclick=()=>{const f=PREV.files[PREV.cur];dlBlob(f.blob,f.name)};$('pdfPrevAll').onclick=()=>PREV.files.forEach((f,i)=>setTimeout(()=>dlBlob(f.blob,f.name),i*600));
   $('pdfPrevOpen').onclick=()=>{const t=window.open(PREV.urls[PREV.cur],'_blank');if(!t)toast('O navegador bloqueou a nova aba. Use "Baixar PDF" ou permita pop-ups para este arquivo.')}}
 
@@ -671,7 +692,7 @@ const instRows=parts.map((v,i)=>{let tot=companies.length>1?coSplits.reduce((a,c
 const sinalRow=sinal?`<tr class="inv-company-total"><td class="c">Sinal</td><td class="n">${fmtDate(sinalDate)} · à vista</td>${companies.length>1?coSplits.map(c=>`<td class="r n">${money(c.sinal)}</td>`).join(''):''}<td class="r n"><b>${money(sinal)}</b></td></tr>`:'';
 $('invoiceInstallments').innerHTML=`<div class="inv-scroll"><table class="inv-t"><thead><tr><th class="c">Parcela</th><th>Vencimento</th>${companies.length>1?coSplits.map(c=>`<th class="r">${esc(c.company)}</th>`).join(''):''}<th class="r">Valor</th></tr></thead><tbody>${sinalRow}${instRows}</tbody><tfoot><tr><td colspan="2" class="r">Total</td>${companies.length>1?coSplits.map(c=>`<td class="r n">${money(c.sinal+c.parts.reduce((a,x)=>a+x,0))}</td>`).join(''):''}<td class="r n">${money(b)}</td></tr></tfoot></table></div><div class="inv-sub" style="margin-top:6px">${n===1?'Pagamento à vista.':(sinal?`Sinal à vista de ${money(sinal)} em ${fmtDate(sinalDate)}; saldo de ${money(cents(b-sinal))} em ${n} parcelas mensais e sucessivas.`:'Parcelas mensais e sucessivas.')}${companies.length>1?' Cada parcela é paga a cada empresa credora no valor indicado na respectiva coluna.':''}</div>`;
 $('invRecon').querySelectorAll('.sinal-line').forEach(x=>x.remove());if(sinal){const rb=$('invReconB').parentElement;rb.insertAdjacentHTML('afterend',`<div class="sinal-line"><span>(−) Sinal à vista · ${fmtDate(sinalDate)}</span><span>− ${money(sinal)}</span></div><div class="sinal-line"><span>(=) Saldo a parcelar · ${n}×</span><span>${money(cents(b-sinal))}</span></div>`)}
-{const multi=new Set(selected.map(r=>norm(r.client).trim())).size>1;$('termoBtn').classList.toggle('is-off',multi);$('termoBtn').setAttribute('aria-disabled',String(multi));$('termoBtn').title=multi?'Indisponível: a Confissão de Dívida é emitida por cliente, e esta fatura reúne vários clientes.':''}
+{const multi=new Set(selected.map(r=>norm(r.client).trim())).size>1;$('termoBtn').classList.toggle('is-off',multi);$('termoBtn').setAttribute('aria-disabled',String(multi));$('termoBtn').title=multi?'Indisponível: a Confissão de Dívida é emitida por cliente, e esta fatura reúne vários clientes.':'';$('ntfBtn').classList.toggle('is-off',multi);$('ntfBtn').setAttribute('aria-disabled',String(multi));$('ntfBtn').title=multi?'Indisponível: a Notificação Extrajudicial é emitida por cliente, e esta fatura reúne vários clientes.':'Constitui o cliente em mora e comunica a suspensão do fornecimento e do atendimento técnico'}
 state.lastInvoice={addr:state.invoiceAddr||'',reps:state.invoiceReps||'',sinal,sinalDate,coSinal:Object.fromEntries(coSplits.map(c=>[c.company,c.sinal])),ids:selected.map(r=>r.id),issued:now,docNo,n,due,client:state.invoiceClientName||clients.join(' · '),cnpj:state.invoiceCnpj};
 $('invFoot').textContent=`Documento emitido em ${now.toLocaleDateString('pt-BR')} às ${hh}:${mm} · Emissor de Cobranças - GRUPO LABMEDIC · Demonstrativo de títulos de cobrança`;
 $('invoice').classList.add('visible');$('invoiceModal').classList.add('open');}
@@ -1242,6 +1263,161 @@ function buildTermoPdf(rows,L,company,cq,cfg,dev){
     let ly=fy+4;LH.foot.forEach(t=>doc.splitTextToSize(t,TW).forEach(l=>{doc.text(l,W/2,ly,{align:'center'});ly+=3.3}))}
   doc.setProperties({title:'Confissão de Dívida · '+company+' · '+(L.client||''),subject:'Instrumento particular de confissão de dívida',author:'Grupo Labmedic · Emissor de Cobranças',creator:'Emissor de Cobranças'});
   return doc}
+
+/* ==========================================================================
+   Notificação Extrajudicial · constituição em mora e suspensão do fornecimento
+   e da assistência técnica.
+   - Um PDF por empresa notificante (LABMEDIC / DIAG RIO), no timbrado de cada uma.
+   - Lista apenas os títulos VENCIDOS da fatura emitida (um cliente por documento).
+   - O operador define a data da suspensão, o que é suspenso, a eventual
+     prorrogação já concedida (e por quantos dias) e o prazo de restabelecimento.
+   ========================================================================== */
+const NTF_KEY='GL-ntf-v1';
+const ntfOverdue=(rows,c)=>{const t=todayISO();return rows.filter(r=>r.company===c&&r.due<t)};
+function ntfBlocked(){
+  const L=state.lastInvoice,rows=tcdRows();
+  if(!L||!rows.length){toast('Gere a fatura com títulos em aberto antes de emitir a notificação.');return true}
+  if(termoClients().length>1){toast('A Notificação Extrajudicial é emitida por cliente. Esta fatura reúne vários clientes: selecione um único cliente na busca para emitir a notificação.');return true}
+  if(!window.jspdf?.jsPDF){toast('Não foi possível carregar o gerador de PDF. Verifique sua conexão.');return true}
+  return false}
+function paintNtfExt(){$('ntfExtDays').disabled=$('ntfExt').value!=='yes'}
+function openNtfModal(){
+  if(ntfBlocked())return;
+  const L=state.lastInvoice,rows=tcdRows(),today=todayISO(),cos=['LABMEDIC','DIAG RIO'].filter(c=>rows.some(r=>r.company===c));
+  if(!cos.some(c=>ntfOverdue(rows,c).length)){toast('Nenhum título desta fatura está vencido. A notificação só é emitida para títulos vencidos.');return}
+  $('ntfCompanies').innerHTML=cos.map(c=>{const g=ntfOverdue(rows,c),tot=g.reduce((a,r)=>a+balance(r),0),off=!g.length;
+    return `<label class="tcd-co${off?' off':''}"><input type="checkbox" class="ntf-co-check" value="${esc(c)}" ${off?'disabled':'checked'}><span><b>${esc(credor(c).razao)}</b><small>CNPJ ${credor(c).cnpj} · ${off?'sem títulos vencidos nesta fatura: não há o que notificar':`${g.length} título(s) vencido(s) · ${money(tot)}`}</small></span></label>`}).join('');
+  const cfg=tcdLoad(NTF_KEY,{}),dev=(tcdLoad(TCD_DEV_KEY,{}))[tcdDevKey()]||{};
+  $('ntfDevName').value=L.client||'';$('ntfDevCnpj').value=L.cnpj||'Não informado';$('ntfAddr').value=L.addr||dev.addr||'';
+  const ck=tcdDevKey(),pc=(cfg.clients||{})[ck]||{};$('ntfDate').value=today;$('ntfDate').min=today;$('ntfRestab').value=pc.restab??cfg.restab??5;
+  $('ntfSupply').checked=true;$('ntfTech').checked=true;
+  $('ntfExt').value=pc.ext?'yes':'no';$('ntfExtDays').value=pc.extDays??cfg.extDays??15;paintNtfExt();$('ntfRemember').textContent=pc.at?`Prazo de restabelecimento e prorrogação lembrados da última notificação a este cliente (${fmtDate(pc.at)}). Confira antes de gerar: a prorrogação pode ter mudado.`:'Primeira notificação a este cliente neste navegador: valores padrão. O que você informar fica lembrado para a próxima.';
+  $('ntfCity').value=cfg.city??((tcdLoad(TCD_CFG_KEY,{})).city||'Rio de Janeiro');$('ntfSeq').value=1;$('ntfValues').checked=false;
+  $('ntfModal').classList.add('open');setTimeout(()=>{if(!$('ntfModal').contains(document.activeElement))$('ntfDate').focus()},50)}
+
+function generateNtf(){
+  if(ntfBlocked())return;
+  const L=state.lastInvoice,rows=tcdRows(),today=todayISO();
+  const cos=[...document.querySelectorAll('.ntf-co-check:checked')].map(x=>x.value);if(!cos.length){toast('Marque ao menos uma empresa notificante.');return}
+  const date=$('ntfDate').value;if(!date){toast('Informe a data a partir da qual a suspensão produz efeitos.');return}
+  if(date<today){toast('A data da suspensão não pode ser anterior a hoje.');return}
+  const supply=$('ntfSupply').checked,tech=$('ntfTech').checked;if(!supply&&!tech){toast('Marque o que será suspenso: fornecimento, assistência técnica ou ambos.');return}
+  const ext=$('ntfExt').value==='yes',extDays=Math.floor(Number($('ntfExtDays').value));
+  if(ext&&!(extDays>=1)){toast('Informe por quantos dias o vencimento foi prorrogado.');return}
+  const restab=Math.floor(Number($('ntfRestab').value));if(!(restab>=1)){toast('Informe o prazo de restabelecimento, em dias corridos.');return}
+  const seq=Math.max(1,Math.floor(Number($('ntfSeq').value))||1),addr=$('ntfAddr').value.trim(),city=$('ntfCity').value.trim();
+  /* endereço da notificada: vale também para a fatura e a Confissão de Dívida */
+  L.addr=addr;if(state.invoiceDevKey===devKeyOf(L.cnpj,L.client))state.invoiceAddr=addr;devStore(L.cnpj,L.client,{addr,reps:L.reps||''});
+  {const c0=tcdLoad(NTF_KEY,{}),ck=tcdDevKey(),clients={...(c0.clients||{})};if(ck)clients[ck]={restab,ext,extDays:ext?extDays:(clients[ck]?.extDays??c0.extDays??15),at:today};tcdSave(NTF_KEY,{...c0,restab,city,...(ext?{extDays}:{}),clients})}
+  const cfg={now:new Date(),susp:date,supply,tech,ext,extDays,restab,seq,addr,city,values:$('ntfValues').checked};
+  const btn=$('ntfGenerate');btn.disabled=true;
+  try{const slug=norm(L.client).replace(/[^a-z0-9]+/g,'_').slice(0,40).replace(/^_+|_+$/g,'')||'cliente',files=[];
+    cos.forEach(c=>{const g=ntfOverdue(rows,c);if(!g.length)return;const doc=buildNotificacaoPdf(g,L,c,cfg);
+      files.push({label:c,blob:doc.output('blob'),name:`Notificacao_Extrajudicial_${c.replace(/\s+/g,'_')}_${slug}_${isoLocal(cfg.now)}.pdf`})});
+    $('ntfModal').classList.remove('open');
+    showPdfPreview(files,'Notificação Extrajudicial',files.length>1?`${files.length} notificações, uma por empresa. Confira antes de imprimir ou baixar.`:`${credor(cos[0]).razao} · suspensão a partir de ${fmtDate(date)}. Confira antes de imprimir ou baixar.`)}
+  catch(e){console.error(e);toast('Não foi possível gerar a notificação extrajudicial.')}finally{btn.disabled=false}}
+
+function buildNotificacaoPdf(rows,L,company,cfg){
+  const {jsPDF}=window.jspdf,doc=new jsPDF({orientation:'portrait',unit:'mm',format:'a4',compress:true});
+  const W=210,ML=22,MR=188,TW=MR-ML,TOP=36,BOT=263;
+  const C={navy:company==='DIAG RIO'?[38,50,92]:[16,52,78],ink:[27,36,48],muted:[92,107,126],line:[207,216,227],soft:[244,247,250]};
+  const fill=c=>doc.setFillColor(...c),stroke=c=>doc.setDrawColor(...c),color=c=>doc.setTextColor(...c),font=(w='normal',sz=10)=>{doc.setFont('helvetica',w);doc.setFontSize(sz)};
+  const now=cfg.now,today=isoLocal(now),blank='_______________________________';
+  const cred=credor(company),cq=credQual(company),LH=lhOf(company),acc=LH.c1,pale=LH.soft;
+  const issued=L.issued instanceof Date?L.issued:new Date(L.issued);
+  const no=`NE-${cred.code}-${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}-${String(cfg.seq).padStart(3,'0')}`;
+  const devName=L.client||blank,devCnpj=L.cnpj||blank;let y=TOP;
+
+  const pageHeader=()=>{const lh=LH.h,lw=lh*LH.ratio;doc.addImage(LH.logo(),'JPEG',(W-lw)/2,8,lw,lh,'logo-'+cred.code,'FAST');
+    const ry=8+lh+3;stroke([17,17,17]);doc.setLineWidth(.55);doc.line(ML,ry,MR,ry);
+    doc.setFont(company==='DIAG RIO'?'times':'helvetica','normal');doc.setFontSize(company==='DIAG RIO'?10:9);color([27,36,48]);doc.text(LH.name,W/2,ry+4.6,{align:'center'});y=TOP};
+  const newPage=()=>{doc.addPage();pageHeader()};
+  const ensure=h=>{if(y+h>BOT)newPage()};
+  const tokenize=s=>{const words=[];let bold=false,cur=null;String(s).split('**').forEach((seg,i)=>{if(i>0)bold=!bold;seg.split(/(\s+)/).forEach(p=>{if(p==='')return;if(/^\s+$/.test(p)){cur=null;return}if(!cur){cur=[];words.push(cur)}cur.push({t:p,b:bold})})});return words};
+  const wWidth=(w,sz)=>w.reduce((a,p)=>{font(p.b?'bold':'normal',sz);return a+doc.getTextWidth(p.t)},0);
+  const para=(text,{x=ML,width=TW,size=9.6,lead=4.55,after=2.4,label=null,labelW=0,align='justify',tone=C.ink}={})=>{
+    const words=tokenize(text),tx=x+labelW,tw=width-labelW;font('normal',size);const sp=doc.getTextWidth(' ');
+    const lines=[];let cur=[],cw=0;words.forEach(w=>{const ww=wWidth(w,size);if(cur.length&&cw+sp+ww>tw){lines.push({ws:cur,w:cw});cur=[];cw=0}cw+=(cur.length?sp:0)+ww;cur.push({w,ww})});if(cur.length)lines.push({ws:cur,w:cw});
+    lines.forEach((ln,i)=>{ensure(lead);const by=y+3.4;if(i===0&&label){font('bold',size);color(C.navy);doc.text(label,x,by)}
+      const last=i===lines.length-1,n=ln.ws.length,gap=(align==='justify'&&!last&&n>1)?(tw-ln.ws.reduce((a,o)=>a+o.ww,0))/(n-1):sp;
+      let cx=align==='center'?tx+(tw-ln.w)/2:tx;ln.ws.forEach(o=>{let px=cx;o.w.forEach(p=>{font(p.b?'bold':'normal',size);color(tone);doc.text(p.t,px,by);px+=doc.getTextWidth(p.t)});cx+=o.ww+gap});y+=lead});
+    y+=after};
+  const sec=t=>{ensure(22);y+=2;font('bold',9.8);color(acc);doc.text(t,ML,y+3.4);stroke(C.line);doc.setLineWidth(.25);doc.line(ML,y+5.4,MR,y+5.4);y+=8.6};
+  const item=(label,text)=>para(text,{x:ML+4,width:TW-4,label,labelW:7});
+  const table=(cols,trs,{foot=null,size=8}={})=>{const pad=1.8,lh=3.5;let zi=0;
+    const drawHead=()=>{ensure(8);fill(acc);doc.rect(ML,y,TW,7,'F');font('bold',7);color([255,255,255]);let x=ML;cols.forEach(c=>{const tx=c.align==='right'?x+c.w-pad:c.align==='center'?x+c.w/2:x+pad;doc.text(c.h,tx,y+4.6,{align:c.align||'left'});x+=c.w});y+=7};
+    drawHead();trs.forEach(r=>{font('normal',size);const cells=cols.map((c,i)=>doc.splitTextToSize(String(r[i]??''),c.w-pad*2)),h=Math.max(...cells.map(l=>l.length))*lh+pad*2;
+      if(y+h>BOT){newPage();drawHead()}if(zi++%2){fill(C.soft);doc.rect(ML,y,TW,h,'F')}
+      let x=ML;cols.forEach((c,i)=>{font(c.bold?'bold':'normal',size);color(c.tone?c.tone(r):C.ink);cells[i].forEach((t,k)=>{const tx=c.align==='right'?x+c.w-pad:c.align==='center'?x+c.w/2:x+pad;doc.text(t,tx,y+pad+2.7+k*lh,{align:c.align||'left'})});x+=c.w});
+      stroke(C.line);doc.setLineWidth(.2);doc.line(ML,y+h,MR,y+h);y+=h});
+    if(foot){ensure(8);fill(pale);doc.rect(ML,y,TW,7,'F');stroke(C.navy);doc.setLineWidth(.5);doc.line(ML,y+7,MR,y+7);font('bold',8);color(C.navy);let x=ML;cols.forEach((c,i)=>{if(foot[i]){const tx=c.align==='right'?x+c.w-pad:c.align==='center'?x+c.w/2:x+pad;doc.text(String(foot[i]),tx,y+4.7,{align:c.align||'left'})}x+=c.w});y+=7}
+    y+=3.5};
+
+  /* números do documento */
+  rows=[...rows].sort((a,b)=>a.due.localeCompare(b.due));
+  const c2=v=>Math.round(v*100)/100,pago=c2(rows.reduce((a,r)=>a+paid(r),0)),saldo=c2(rows.reduce((a,r)=>a+balance(r),0)),showVal=cfg.values||pago>0;
+  const {supply:sup,tech:tec}=cfg,suspDate=new Date(cfg.susp+'T12:00:00'),nDias=(n,adj='')=>`${qtd(n)} dia${n>1?'s':''}${adj?' '+adj+(n>1?'s':''):''}`;
+  const objeto=[sup&&'o fornecimento de insumos laboratoriais',tec&&'a prestação de serviços de assistência técnica e manutenção de equipamentos médicos instalados em suas unidades'].filter(Boolean).join(' e ');
+  const suspAssunto=sup&&tec?'suspensão do fornecimento de insumos e da prestação de serviços de assistência técnica aos equipamentos vinculados':sup?'suspensão do fornecimento de insumos':'suspensão da prestação de serviços de assistência técnica aos equipamentos vinculados';
+  const suspTexto=sup&&tec?'ficam **SUSPENSOS** o fornecimento de insumos e a prestação dos serviços de assistência técnica (manutenção corretiva, preventiva e suporte) aos equipamentos a ela vinculados, em todas as unidades atendidas'
+    :sup?'fica **SUSPENSO** o fornecimento de insumos, em todas as unidades atendidas'
+    :'fica **SUSPENSA** a prestação dos serviços de assistência técnica (manutenção corretiva, preventiva e suporte) aos equipamentos a ela vinculados, em todas as unidades atendidas';
+  const restabObj=sup&&tec?'do fornecimento e dos serviços':sup?'do fornecimento':'dos serviços';
+
+  pageHeader();
+  y=42;font('bold',15);color(acc);doc.text('NOTIFICAÇÃO EXTRAJUDICIAL',W/2,y,{align:'center'});y+=5.5;
+  font('normal',8.5);color(C.muted);doc.text(`Nº ${no}  ·  ${cfg.city||blank}, ${dateExt(now)}`,W/2,y,{align:'center'});y+=8;
+
+  para(`**NOTIFICANTE:** **${cred.razao}**, pessoa jurídica de direito privado, inscrita no CNPJ sob o nº **${cred.cnpj}**, com sede em ${cq.addr||blank}, neste ato por seu(s) representante(s) legal(is) ao final assinado(s).`,{after:3});
+  para(`**NOTIFICADA:** **${devName}**, pessoa jurídica de direito privado, inscrita no CNPJ sob o nº **${devCnpj}**, com sede em ${cfg.addr||blank}.`,{after:3});
+  para(`**ASSUNTO:** Constituição em mora e comunicação de ${suspAssunto}, com efeitos a partir de **${fmtDate(cfg.susp)}**.`,{after:3.4});
+
+  sec('1. DOS FATOS');
+  para(`A **NOTIFICANTE** mantém com a **NOTIFICADA** relação comercial que tem por objeto ${objeto}. Em contrapartida, cabe à **NOTIFICADA** o pagamento pontual dos títulos emitidos, nas datas de vencimento ajustadas.`);
+  para(`Ocorre que, conforme demonstrativo de cobrança nº **${L.docNo}**, emitido em ${issued.toLocaleDateString('pt-BR')}, encontram-se ${pago>0?'vencidos, com saldo em aberto,':'vencidos e não pagos'} os títulos abaixo discriminados, ${pago>0?`já deduzidos os pagamentos parciais lançados a seu favor, no total de ${money(pago)}:`:'sem que tenha havido, até a presente data, qualquer pagamento, ainda que parcial, lançado a seu favor:'}`);
+  const ref=r=>{const d=String(r.description||'').trim()||'Parcela',u=String(r.unit||'').trim();return u&&!norm(d).includes(norm(u))?`${d} – ${u}`:d};
+  const cols=[{h:'ITEM',w:14,align:'center'},{h:'DOCUMENTO / REFERÊNCIA',w:TW-14-24-34-(showVal?26:0)},{h:'VENCIMENTO',w:24,align:'center'},{h:`ATRASO EM ${now.toLocaleDateString('pt-BR')}`,w:34,align:'center'},...(showVal?[{h:'SALDO',w:26,align:'right',bold:true}]:[])];
+  const trs=rows.map((r,i)=>{const d=daysLate(r.due,today);return [String(i+1),ref(r),fmtDate(r.due),`${d} dia${d>1?'s':''}`,...(showVal?[money(balance(r))]:[])]});
+  table(cols,trs,{foot:showVal?['TOTAL','','','',money(saldo)]:null,size:7.8});
+  para(`Total de títulos vencidos: **${rows.length}**${showVal?`, no saldo de **${money(saldo)}**`:''}. Os títulos encontram-se à disposição da **NOTIFICADA**, em seus documentos fiscais e demonstrativos de origem, para conferência.`);
+  if(cfg.ext)para(`Ressalte-se que os vencimentos acima indicados já são resultado de prorrogação de **${nDias(cfg.extDays)}**, solicitada pela própria **NOTIFICADA** e concedida pela **NOTIFICANTE** por mera liberalidade e em demonstração de boa-fé comercial. Ainda assim, os novos prazos também não foram cumpridos, de modo que o atraso atual se soma ao período já concedido, configurando reiterado descumprimento das obrigações assumidas.`);
+
+  sec('2. DO DIREITO');
+  para('Tratando-se de obrigações positivas, líquidas e com termo certo, o simples inadimplemento no vencimento constitui de pleno direito o devedor em mora, nos termos do art. 397, caput, do Código Civil, sujeitando-o aos efeitos dos arts. 389 e 395 do mesmo diploma (correção monetária, juros, perdas e danos e demais encargos contratuais e legais), sem prejuízo de outras cominações aplicáveis.');
+  para('Ademais, nos contratos bilaterais, nenhum dos contratantes, antes de cumprida a sua obrigação, pode exigir o implemento da do outro (art. 476 do Código Civil – exceptio non adimpleti contractus), sendo igualmente lícito à parte que deve prestar em primeiro lugar recusar-se a fazê-lo diante de fundado risco de não receber a contraprestação (art. 477 do Código Civil), observados os deveres de boa-fé objetiva e lealdade contratual (arts. 113 e 422 do Código Civil), em cujo cumprimento se expede a presente comunicação prévia e formal.');
+
+  sec('3. DA NOTIFICAÇÃO');
+  para('Diante do exposto, a **NOTIFICANTE**, pela presente e na melhor forma de direito, **NOTIFICA** a **NOTIFICADA** para:',{after:2});
+  item('(a)','dar-se por formalmente constituída em mora quanto aos títulos acima relacionados, para todos os fins de direito;');
+  item('(b)',`tomar ciência de que, a partir de **${dateExt(suspDate)}**, ${suspTexto}, até a integral regularização dos débitos vencidos;`);
+  item('(c)','adotar, sob sua exclusiva responsabilidade, as providências necessárias à continuidade de suas atividades e do atendimento a seus pacientes durante o período de suspensão, não sendo imputável à **NOTIFICANTE** qualquer prejuízo, interrupção ou dano decorrente da medida, que tem causa exclusiva no inadimplemento da **NOTIFICADA**;');
+  item('(d)','abster-se de utilizar, ceder, remover ou permitir a intervenção de terceiros nos equipamentos de propriedade da **NOTIFICANTE** eventualmente cedidos em comodato ou locação, que permanecem sob a guarda e responsabilidade da **NOTIFICADA**, na condição de depositária, nos termos dos arts. 582 e 627 e seguintes do Código Civil, conforme aplicável.');
+
+  sec('4. DA REGULARIZAÇÃO');
+  para(`O restabelecimento ${restabObj} ocorrerá em até **${nDias(cfg.restab,'corrido')}** após a confirmação da compensação do pagamento integral dos títulos vencidos, ou mediante formalização de acordo escrito de composição, a critério da **NOTIFICANTE**. Pagamentos eventualmente já realizados e não refletidos nesta notificação deverão ser comunicados, com o respectivo comprovante e a indicação do documento nº **${L.docNo}**, pelo mesmo canal eletrônico de recebimento desta.`);
+
+  sec('5. DAS RESSALVAS');
+  para('A presente suspensão não implica renúncia, novação ou rescisão contratual, nem extingue as obrigações da **NOTIFICADA**, inclusive as vincendas. Persistindo o inadimplemento, a **NOTIFICANTE** reserva-se o direito de, independentemente de nova comunicação, promover o protesto dos títulos (Lei nº 9.492/1997), a inclusão do débito em cadastros de proteção ao crédito, a rescisão contratual por inadimplemento (art. 475 do Código Civil), a retomada dos equipamentos de sua propriedade e as medidas judiciais cabíveis, inclusive execução e cobrança, com acréscimo de encargos moratórios, custas e honorários advocatícios.');
+  para('Esta notificação é encaminhada por correio eletrônico e assinada eletronicamente, com validade jurídica nos termos da Medida Provisória nº 2.200-2/2001 e da Lei nº 14.063/2020, servindo o registro de envio e recebimento como prova de sua entrega para todos os efeitos legais.',{after:5});
+
+  /* assinatura da notificante + espaço do manifesto de assinatura eletrônica */
+  ensure(62);font('normal',9.6);color(C.ink);doc.text(`${cfg.city||blank}, ${dateExt(now)}.`,W/2,y+3,{align:'center'});y+=19;
+  stroke(C.ink);doc.setLineWidth(.3);doc.line(ML+25,y,MR-25,y);font('bold',8.6);color(C.navy);let sy=y+4.2;
+  doc.splitTextToSize(cred.razao,TW-30).forEach(t=>{doc.text(t,W/2,sy,{align:'center'});sy+=3.9});
+  font('normal',7.8);color(C.muted);doc.text(`CNPJ ${cred.cnpj}`,W/2,sy+.2,{align:'center'});sy+=3.9;
+  doc.text(`Representante legal · assinatura eletrônica${cq.signer?' · '+cq.signer:''}`,W/2,sy+.2,{align:'center'});y=sy+7;
+  ensure(18);stroke(C.line);doc.setLineWidth(.3);doc.setLineDashPattern([1.4,1.4],0);doc.roundedRect(ML,y,TW,13,1.5,1.5,'S');doc.setLineDashPattern([],0);
+  font('normal',7.4);color(C.muted);doc.text('Espaço reservado ao manifesto de assinatura eletrônica: signatário, CPF, data/hora, IP e código de verificação.',W/2,y+7.6,{align:'center',maxWidth:TW-8});y+=13;
+
+  const tot=doc.getNumberOfPages();for(let p=1;p<=tot;p++){doc.setPage(p);
+    font('normal',6.8);color(C.muted);doc.text(`${no} · Página ${p} de ${tot}`,ML,BOT+5);
+    const fy=BOT+11;stroke([17,17,17]);doc.setLineWidth(.55);doc.line(ML,fy,MR,fy);doc.setFont(company==='DIAG RIO'?'times':'helvetica','normal');doc.setFontSize(company==='DIAG RIO'?7.6:6.9);color([60,72,88]);
+    let ly=fy+4;LH.foot.forEach(t=>doc.splitTextToSize(t,TW).forEach(l=>{doc.text(l,W/2,ly,{align:'center'});ly+=3.3}))}
+  doc.setProperties({title:'Notificação Extrajudicial · '+company+' · '+(L.client||''),subject:'Notificação extrajudicial de constituição em mora e suspensão',author:'Grupo Labmedic · Emissor de Cobranças',creator:'Emissor de Cobranças'});
+  return doc}
+
+$('ntfBtn').onclick=openNtfModal;$('ntfGenerate').onclick=generateNtf;$('ntfExt').onchange=paintNtfExt;
 
 init();
 </script><script>
